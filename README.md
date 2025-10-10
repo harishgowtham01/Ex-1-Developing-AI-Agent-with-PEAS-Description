@@ -1,7 +1,7 @@
 # Ex-1-Developing-AI-Agent-with-PEAS-Description
-### Name:
+### Name: HARISH GOWTHAM E
 
-### Register Number:
+### Register Number: 2305002009
 
 ### Aim:
 To find the PEAS description for the given AI problem and develop an AI agent.
