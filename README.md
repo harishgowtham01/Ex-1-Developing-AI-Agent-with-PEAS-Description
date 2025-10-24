@@ -20,22 +20,7 @@ S-Sensors
 
 It’s a framework used to define the task environment for an AI agent clearly.
 
-### Pick an AI Problem
-
-```
-
-1. Self-driving car
-
-2. Chess playing agent
-
-3. Vacuum cleaning robot
-
-4. Email spam filter
-
-5. Personal assistant (like Siri or Alexa)
-```
-
-### VacuumCleanerAgent
+### Chess playing agent
 ### Algorithm:
 Step 1: Initialize:
 
@@ -58,64 +43,99 @@ Step 4: Print total steps taken (optional)
 
 ### Program:
 ```
-class VacuumCleanerAgent:
-    def __init__(self):
-        # Initialize the agent's state (location and dirt status)
-        self.location = "A"  # Initial location (can be "A" or "B")
-        self.dirt_status = {"A": False, "B": False}  # Initial dirt status (False means no dirt)
+import random
 
-    def move_left(self):
-        # Move the agent to the left if possible
-        if self.location == "B":
-            self.location = "A"
+# Starting chess board
+board = [
+    ["r","n","b","q","k","b","n","r"],
+    ["p","p","p","p","p","p","p","p"],
+    [".",".",".",".",".",".",".","."],
+    [".",".",".",".",".",".",".","."],
+    [".",".",".",".",".",".",".","."],
+    [".",".",".",".",".",".",".","."],
+    ["P","P","P","P","P","P","P","P"],
+    ["R","N","B","Q","K","B","N","R"]
+]
 
-    def move_right(self):
-        # Move the agent to the right if possible
-        if self.location == "A":
-            self.location = "B"
+def print_board():
+    print("   a b c d e f g h")
+    for i, row in enumerate(board):
+        print(f"{8-i}  " + " ".join(row))
+    print()
 
-    def suck_dirt(self):
-        # Suck dirt in the current location if there is dirt
-        if self.dirt_status[self.location]:
-            self.dirt_status[self.location] = False
-            print(f"Sucked dirt in location {self.location}")
+def notation_to_pos(move):
+    col_map = "abcdefgh"
+    return 8-int(move[1]), col_map.index(move[0])
 
-    def do_nothing(self):
-        # Do nothing
-        pass
+def pos_to_notation(pos):
+    row,col = pos
+    col_map = "abcdefgh"
+    return f"{col_map[col]}{8-row}"
 
-    def perform_action(self, action):
-        # Perform the specified action
-        if action == "left":
-            self.move_left()
-        elif action == "right":
-            self.move_right()
-        elif action == "suck":
-            self.suck_dirt()
-        elif action == "nothing":
-            self.do_nothing()
+def get_moves(is_white):
+    moves = []
+    for r in range(8):
+        for c in range(8):
+            piece = board[r][c]
+            if piece == ".": 
+                continue
+            if is_white and piece.isupper() or (not is_white and piece.islower()):
+                for rr in range(8):
+                    for cc in range(8):
+                        if (rr,cc)!=(r,c) and board[rr][cc]=="." or (is_white and board[rr][cc].islower()) or (not is_white and board[rr][cc].isupper()):
+                            moves.append(((r,c),(rr,cc)))
+    return moves
+
+def make_move(start,end):
+    r1,c1=start; r2,c2=end
+    board[r2][c2]=board[r1][c1]
+    board[r1][c1]="."
+
+def game():
+    white_turn=True
+    print_board()
+    while True:
+        flat=sum(board,[])
+        if "K" not in flat:
+            print("Black wins! King captured.")
+            break
+        if "k" not in flat:
+            print("White wins! King captured.")
+            break
+
+        if white_turn:
+            move=input("Your move (e.g., e2 e4): ").split()
+            try:
+                start=notation_to_pos(move[0]); end=notation_to_pos(move[1])
+                make_move(start,end)
+            except:
+                print("Invalid input, try again."); continue
         else:
-            print("Invalid action")
+            moves=get_moves(False)
+            if not moves: 
+                print("Stalemate!"); break
+            start,end=random.choice(moves)
+            make_move(start,end)
+            print(f"AI plays {pos_to_notation(start)} {pos_to_notation(end)}")
 
-    def print_status(self):
-        # Print the current status of the agent
-        print(f"Location: {self.location}, Dirt Status: {self.dirt_status}")
+        print_board()
+        white_turn=not white_turn
 
-# Example usage:
-agent = VacuumCleanerAgent()
-
-
-# Move the agent, suck dirt, and do nothing
-
-agent.perform_action("left")
-agent.print_status()
-agent.perform_action("suck")
-agent.print_status()
-agent.perform_action("nothing")
-agent.print_status()
+game()
 ```
-### Sample Output:
+### Output:
+### Chess Board
+<img width="248" height="214" alt="image" src="https://github.com/user-attachments/assets/5cc7b31a-659b-402e-b628-c98947282c80" />
 
-425810495-d1198ba7-da19-413b-9907-4844afae627f
+### Moving for our side
+<img width="366" height="239" alt="image" src="https://github.com/user-attachments/assets/cf6845af-3ec8-4343-b1a9-9869ff0f7ce3" />
+
+### Ai Moves
+<img width="225" height="230" alt="image" src="https://github.com/user-attachments/assets/62181e63-0f3d-4386-b86e-874839e315d6" />
+
+
+
+
 
 ### Result:
+Thus,the program for Developing-AI-Agent-with-PEAS- chess board was implemented and executed successfully.
